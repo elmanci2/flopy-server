@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum DeploymentStatus {
+  SUCCESS
+  FAILURE
+}
+
+model App {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  apiKey    String   @unique @default(cuid())
+  createdAt DateTime @default(now())
+
+  releases Release[]
+
+  users UsersOnApps[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  apps UsersOnApps[]
+}
+
+model UsersOnApps {
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  app    App    @relation(fields: [appId], references: [id], onDelete: Cascade)
+  appId  String
+
+  @@id([userId, appId])
+}
+
+model Deployment {
+  id             String           @id @default(cuid())
+  clientUniqueId String
+  status         DeploymentStatus
+  createdAt      DateTime         @default(now())
+
+  releaseId String
+  release   Release @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@index([releaseId])
+}
+
+model Release {
+  id                  String   @id @default(cuid())
+  appId               String
+  channel             String
+  targetBinaryVersion String
+  bundleUrl           String
+  hash                String   @unique
+  isMandatory         Boolean  @default(false)
+  rolloutPercentage   Int      @default(100)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+
+  app App @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  deployments Deployment[]
+
+  @@index([appId, channel, isActive, createdAt])
+}
