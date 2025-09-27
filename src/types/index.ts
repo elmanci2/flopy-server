@@ -46,4 +46,8 @@ export interface CheckForUpdateResponse {
     hash: string;
     isMandatory: boolean;
   };
+  patch?: {
+    url: string;
+    hash: string;
+  };
 }

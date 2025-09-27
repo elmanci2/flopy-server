@@ -11,6 +11,7 @@ import { upload } from "../lib/multer.config";
 import { authMiddleware } from "../lib/auth.middleware";
 import { validate } from "../lib/validation.middleware";
 import * as schemas from "./schemas";
+import { codePushController } from "./controllers/codePush";
 
 const routesList: RouteLst[] = [
   // --- Ruta Pública de Bienvenida ---
@@ -128,6 +129,36 @@ const routesList: RouteLst[] = [
       validate(schemas.getOrDeleteAppSchema, "params"),
     ],
     handler: appController.deleteApp.bind(appController),
+  },
+
+  {
+    path: "/apps/:appId/deployments",
+    method: "POST",
+    middleware: [
+      authMiddleware,
+      validate(schemas.appIdParamsSchema, "params"),
+      validate(schemas.createDeploymentSchema, "body"),
+    ],
+    handler: appController.createDeployment.bind(appController),
+  },
+  {
+    path: "/apps/:appId/deployments",
+    method: "GET",
+    middleware: [authMiddleware, validate(schemas.appIdParamsSchema, "params")],
+    handler: appController.listDeployments.bind(appController),
+  },
+
+  //code push
+
+  {
+    path: "/updateCheck",
+    method: "GET",
+    handler: codePushController.updateCheck.bind(codePushController),
+  },
+  {
+    path: "/reportStatus/deploy",
+    method: "POST",
+    handler: codePushController.reportStatus.bind(codePushController),
   },
 ];
 

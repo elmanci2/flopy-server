@@ -1,6 +1,6 @@
 // src/services/metadata/PrismaAppMetadataStore.ts
 import { singleton } from "tsyringe";
-import { PrismaClient } from "../../generated/prisma";
+import { DeploymentKey, PrismaClient } from "../../generated/prisma";
 import { IAppMetadataStore } from "./IAppMetadataStore";
 import { App } from "../../generated/prisma";
 
@@ -43,5 +43,39 @@ export class PrismaAppMetadataStore implements IAppMetadataStore {
     } catch (error) {
       return null;
     }
+  }
+
+  async findByDeploymentKey(
+    key: string,
+  ): Promise<{ app: App; channel: string } | null> {
+    const deploymentKey = await this.prisma.deploymentKey.findUnique({
+      where: { key },
+      include: { app: true },
+    });
+
+    if (!deploymentKey) {
+      return null;
+    }
+
+    return { app: deploymentKey.app, channel: deploymentKey.channel };
+  }
+
+  async createDeploymentKey(
+    appId: string,
+    channel: string,
+  ): Promise<DeploymentKey> {
+    return this.prisma.deploymentKey.create({
+      data: {
+        appId,
+        channel,
+      },
+    });
+  }
+
+  async listDeploymentKeysForApp(appId: string): Promise<DeploymentKey[]> {
+    return this.prisma.deploymentKey.findMany({
+      where: { appId },
+      orderBy: { channel: "asc" },
+    });
   }
 }

@@ -19,6 +19,20 @@ enum DeploymentStatus {
   FAILURE
 }
 
+model DeploymentKey {
+  id        String   @id @default(cuid())
+  key       String   @unique @default(cuid()) // La clave que usará el cliente de CodePush
+  channel   String // ej. "Staging", "Production"
+  createdAt DateTime @default(now())
+
+  // Relación: Una clave pertenece a una única App
+  app   App    @relation(fields: [appId], references: [id], onDelete: Cascade)
+  appId String
+
+  // Asegura que una app no pueda tener la misma clave para el mismo canal dos veces
+  @@unique([appId, channel])
+}
+
 model App {
   id        String   @id @default(cuid())
   name      String   @unique
@@ -27,7 +41,8 @@ model App {
 
   releases Release[]
 
-  users UsersOnApps[]
+  users          UsersOnApps[]
+  deploymentKeys DeploymentKey[]
 }
 
 model User {
@@ -60,6 +75,23 @@ model Deployment {
   @@index([releaseId])
 }
 
+model ReleaseDiff {
+  id        String   @id @default(cuid())
+  patchUrl  String
+  hash      String
+  createdAt DateTime @default(now())
+
+  fromReleaseId String
+  fromRelease   Release @relation("DiffsFromRelease", fields: [fromReleaseId], references: [id], onDelete: Cascade)
+
+  toReleaseId String
+  toRelease   Release  @relation("DiffsToRelease", fields: [toReleaseId], references: [id], onDelete: Cascade)
+  Release     Release? @relation(fields: [releaseId], references: [id])
+  releaseId   String?
+
+  @@unique([fromReleaseId, toReleaseId])
+}
+
 model Release {
   id                  String   @id @default(cuid())
   appId               String
@@ -74,7 +106,10 @@ model Release {
 
   app App @relation(fields: [appId], references: [id], onDelete: Cascade)
 
-  deployments Deployment[]
+  deployments          Deployment[]
+  ReleaseDiff          ReleaseDiff[]
+  diffsFromThisRelease ReleaseDiff[] @relation("DiffsFromRelease")
+  diffsToThisRelease   ReleaseDiff[] @relation("DiffsToRelease")
 
   @@index([appId, channel, isActive, createdAt])
 }

@@ -70,6 +70,45 @@ class AppController {
 
     res.status(204).send();
   }
+
+  async createDeployment(
+    req: AuthenticatedRequest,
+    res: Response,
+  ): Promise<void> {
+    try {
+      const { appId } = req.params;
+      const { channel } = req.body;
+      if (!appId || !channel) {
+        res
+          .status(400)
+          .json({ message: "Los campos 'appId' y 'channel' son requeridos." });
+        return;
+      }
+      const newKey = await this.appStore.createDeploymentKey(appId, channel);
+      res.status(201).json(newKey);
+    } catch (error: any) {
+      if (error.code === "P2002") {
+        res.status(409).json({
+          message: `Ya existe una clave de despliegue para el canal '${req.body.channel}'.`,
+        });
+      } else {
+        res.status(500).json({ message: "Error interno del servidor." });
+      }
+    }
+  }
+
+  async listDeployments(
+    req: AuthenticatedRequest,
+    res: Response,
+  ): Promise<void> {
+    const { appId } = req.params;
+    if (!appId) {
+      res.status(400).json({ message: "El campo 'appId' es requerido." });
+      return;
+    }
+    const keys = await this.appStore.listDeploymentKeysForApp(appId);
+    res.status(200).json(keys);
+  }
 }
 
 const appMetadataStore =

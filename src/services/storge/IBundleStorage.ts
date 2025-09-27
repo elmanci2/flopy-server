@@ -8,4 +8,11 @@ export interface IBundleStorage {
    * @returns La URL pública y accesible del bundle.
    */
   upload(localFilePath: string, destinationPath: string): Promise<string>;
+
+  /**
+   *
+   * @param sourcePath
+   * @param destinationPath
+   */
+  download(sourcePath: string, destinationPath: string): Promise<void>;
 }

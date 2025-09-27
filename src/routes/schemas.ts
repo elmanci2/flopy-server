@@ -12,6 +12,10 @@ export const createAppSchema = Joi.object({
   }),
 });
 
+export const createDeploymentSchema = Joi.object({
+  channel: Joi.string().min(1).required(),
+});
+
 export const getOrDeleteAppSchema = Joi.object({
   id: Joi.string().required().messages({
     "any.required": "El ID de la aplicación es requerido en la URL",

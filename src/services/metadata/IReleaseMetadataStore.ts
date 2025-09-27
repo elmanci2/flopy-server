@@ -1,6 +1,6 @@
 // src/services/metadata/IReleaseMetadataStore.ts
 
-import { Release } from "../../generated/prisma"; // Es mejor usar el tipo generado por Prisma aquí
+import { Release, ReleaseDiff } from "../../generated/prisma"; // Es mejor usar el tipo generado por Prisma aquí
 
 export interface IReleaseMetadataStore {
   /**
@@ -34,4 +34,13 @@ export interface IReleaseMetadataStore {
    * Devuelve una lista de todas las releases para una aplicación específica, ordenadas por fecha.
    */
   findByAppId(appId: string): Promise<Release[]>;
+
+  findPreviousReleases(release: Release): Promise<Release[]>;
+  findDiff(fromHash: string, toHash: string): Promise<ReleaseDiff | null>;
+  createDiff(data: {
+    patchUrl: string;
+    hash: string;
+    fromReleaseId: string;
+    toReleaseId: string;
+  }): Promise<ReleaseDiff>;
 }

@@ -1,7 +1,7 @@
 // src/services/metadata/PrismaReleaseMetadataStore.ts
 
 import { singleton } from "tsyringe";
-import { PrismaClient, Release } from "../../generated/prisma";
+import { PrismaClient, Release, ReleaseDiff } from "../../generated/prisma";
 import * as semver from "semver";
 import { IReleaseMetadataStore } from "./IReleaseMetadataStore";
 
@@ -58,5 +58,38 @@ export class PrismaReleaseMetadataStore implements IReleaseMetadataStore {
       where: { appId },
       orderBy: { createdAt: "desc" },
     });
+  }
+
+  async findPreviousReleases(release: Release): Promise<Release[]> {
+    // Lógica para encontrar hasta 5 releases anteriores en el mismo canal y con el mismo targetBinaryVersion
+    return this.prisma.release.findMany({
+      where: {
+        appId: release.appId,
+        channel: release.channel,
+        targetBinaryVersion: release.targetBinaryVersion,
+        createdAt: { lt: release.createdAt }, // lt = less than
+        isActive: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5, // Limita a generar diffs solo para las 5 versiones más recientes
+    });
+  }
+
+  async findDiff(
+    fromHash: string,
+    toHash: string,
+  ): Promise<ReleaseDiff | null> {
+    return this.prisma.releaseDiff.findFirst({
+      where: {
+        fromRelease: { hash: fromHash },
+        toRelease: { hash: toHash },
+      },
+    });
+  }
+
+  async createDiff(
+    data: Omit<ReleaseDiff, "id" | "createdAt">,
+  ): Promise<ReleaseDiff> {
+    return this.prisma.releaseDiff.create({ data });
   }
 }
