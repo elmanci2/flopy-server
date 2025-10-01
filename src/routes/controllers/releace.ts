@@ -49,6 +49,7 @@ class ReleaseController {
    */
   async checkForUpdate(req: Request, res: Response): Promise<void> {
     try {
+      console.log(req.body);
       const { appId, clientBinaryVersion, channel } = req.body;
       if (!appId || !clientBinaryVersion || !channel) {
         res.status(400).json({

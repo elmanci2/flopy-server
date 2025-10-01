@@ -21,15 +21,13 @@ enum DeploymentStatus {
 
 model DeploymentKey {
   id        String   @id @default(cuid())
-  key       String   @unique @default(cuid()) // La clave que usará el cliente de CodePush
-  channel   String // ej. "Staging", "Production"
+  key       String   @unique @default(cuid())
+  channel   String
   createdAt DateTime @default(now())
 
-  // Relación: Una clave pertenece a una única App
   app   App    @relation(fields: [appId], references: [id], onDelete: Cascade)
   appId String
 
-  // Asegura que una app no pueda tener la misma clave para el mismo canal dos veces
   @@unique([appId, channel])
 }
 

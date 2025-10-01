@@ -33,6 +33,8 @@ export const checkForUpdateSchema = Joi.object({
       "string.pattern.base": "La versión binaria debe tener el formato X.Y.Z",
     }),
   channel: Joi.string().min(1).required(),
+
+  currentReleaseHash: Joi.string().length(64).hex(),
 });
 
 export const publishReleaseSchema = Joi.object({

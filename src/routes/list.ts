@@ -11,7 +11,6 @@ import { upload } from "../lib/multer.config";
 import { authMiddleware } from "../lib/auth.middleware";
 import { validate } from "../lib/validation.middleware";
 import * as schemas from "./schemas";
-import { codePushController } from "./controllers/codePush";
 
 const routesList: RouteLst[] = [
   // --- Ruta Pública de Bienvenida ---
@@ -27,7 +26,6 @@ const routesList: RouteLst[] = [
   {
     path: "/auth/register",
     method: "POST",
-    // ¡La validación se añade aquí también!
     middleware: [validate(schemas.registerSchema, "body")],
     handler: authController.register.bind(authController),
   },
@@ -42,10 +40,7 @@ const routesList: RouteLst[] = [
   {
     path: "/check-for-update",
     method: "POST",
-    middleware: [
-      authMiddleware,
-      validate(schemas.checkForUpdateSchema, "body"),
-    ],
+    middleware: [validate(schemas.checkForUpdateSchema, "body")],
     handler: releaseController.checkForUpdate.bind(releaseController),
   },
   {
@@ -53,7 +48,7 @@ const routesList: RouteLst[] = [
     method: "POST",
     middleware: [
       authMiddleware,
-      upload.single("bundle"), // Multer debe ir antes de la validación del body
+      upload.single("bundle"),
       validate(schemas.publishReleaseSchema, "body"),
     ],
     handler: releaseController.publishNewRelease.bind(releaseController),
@@ -80,7 +75,7 @@ const routesList: RouteLst[] = [
   {
     path: "/report-status",
     method: "POST",
-    middleware: [authMiddleware, validate(schemas.reportStatusSchema, "body")],
+    middleware: [validate(schemas.reportStatusSchema, "body")],
     handler: releaseController.reportStatus.bind(releaseController),
   },
   {
@@ -146,19 +141,6 @@ const routesList: RouteLst[] = [
     method: "GET",
     middleware: [authMiddleware, validate(schemas.appIdParamsSchema, "params")],
     handler: appController.listDeployments.bind(appController),
-  },
-
-  //code push
-
-  {
-    path: "/updateCheck",
-    method: "GET",
-    handler: codePushController.updateCheck.bind(codePushController),
-  },
-  {
-    path: "/reportStatus/deploy",
-    method: "POST",
-    handler: codePushController.reportStatus.bind(codePushController),
   },
 ];
 
