@@ -16,10 +16,6 @@ RUN npm ci
 
 COPY . .
 
-
-COPY .env .env
-
-
 RUN npx prisma generate --schema=./prisma/schema.prisma
 
 
