@@ -1,5 +1,5 @@
 // src/services/metadata/IAppMetadataStore.ts
-import { DeploymentKey, type App } from "../../generated/prisma";
+import { DeploymentKey, type App } from "@prisma/client";
 
 export interface IAppMetadataStore {
   create(name: string, ownerId: string): Promise<App>;

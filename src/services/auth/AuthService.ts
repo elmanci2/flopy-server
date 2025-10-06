@@ -1,9 +1,10 @@
 // src/core/AuthService.ts
 
 import { singleton } from "tsyringe";
-import { PrismaClient, User } from "../../generated/prisma";
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { PrismaClient, User } from "@prisma/client";
 
 interface JwtPayload {
   userId: string;

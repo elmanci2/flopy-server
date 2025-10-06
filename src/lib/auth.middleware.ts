@@ -2,8 +2,8 @@
 import { Request, Response, NextFunction } from "express";
 import { container } from "tsyringe";
 
-import { PrismaClient } from "../generated/prisma";
 import { AuthService } from "../services/auth/AuthService";
+import { PrismaClient } from "@prisma/client";
 
 // Define una extensión de la interfaz Request de Express para añadir el usuario
 export interface AuthenticatedRequest extends Request {

@@ -1,10 +1,11 @@
 // src/services/metadata/PrismaDeploymentMetadataStore.ts
 import { singleton } from "tsyringe";
-import { PrismaClient } from "../../generated/prisma";
+
 import {
   IDeploymentMetadataStore,
   DeploymentMetrics,
 } from "./IDeploymentMetadataStore";
+import { PrismaClient } from "@prisma/client";
 
 @singleton()
 export class PrismaDeploymentMetadataStore implements IDeploymentMetadataStore {

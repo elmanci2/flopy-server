@@ -1,9 +1,10 @@
 // src/services/metadata/PrismaReleaseMetadataStore.ts
 
 import { singleton } from "tsyringe";
-import { PrismaClient, Release, ReleaseDiff } from "../../generated/prisma";
+
 import * as semver from "semver";
 import { IReleaseMetadataStore } from "./IReleaseMetadataStore";
+import { PrismaClient, Release, ReleaseDiff } from "@prisma/client";
 
 @singleton()
 export class PrismaReleaseMetadataStore implements IReleaseMetadataStore {
@@ -37,7 +38,7 @@ export class PrismaReleaseMetadataStore implements IReleaseMetadataStore {
     if (!candidates.length) return null;
 
     return (
-      candidates.find((release) =>
+      candidates.find((release: any) =>
         semver.satisfies(clientBinaryVersion, release.targetBinaryVersion),
       ) || null
     );

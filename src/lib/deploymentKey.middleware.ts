@@ -4,7 +4,7 @@ import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "./auth.middleware";
 import { container } from "tsyringe";
 import { IAppMetadataStore } from "../services/metadata/IAppMetadataStore";
-import { App } from "../generated/prisma";
+import { App } from "@prisma/client";
 
 // Extendemos la petición para que pueda contener la información de la app validada
 export interface ValidatedAppRequest extends AuthenticatedRequest {

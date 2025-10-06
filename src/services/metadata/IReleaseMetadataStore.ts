@@ -1,6 +1,7 @@
 // src/services/metadata/IReleaseMetadataStore.ts
 
-import { Release, ReleaseDiff } from "../../generated/prisma"; // Es mejor usar el tipo generado por Prisma aquí
+import { ReleaseDiff } from "@prisma/client";
+import { Release } from "../../types";
 
 export interface IReleaseMetadataStore {
   /**
