@@ -94,6 +94,13 @@ const routesList: RouteLst[] = [
     handler: releaseController.getMetrics.bind(releaseController),
   },
 
+  {
+    path: "/releases/state",
+    method: "POST",
+    middleware: [authMiddleware, validate(schemas.changeStateSchema, "body")],
+    handler: releaseController.changetState.bind(releaseController),
+  },
+
   // --- Rutas de Gestión de Apps (Protegidas y con Validación) ---
   {
     path: "/apps",

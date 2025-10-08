@@ -163,4 +163,11 @@ export class ReleaseOrchestrator {
       stream.on("error", (err) => reject(err));
     });
   }
+
+  /**
+   * deactive release
+   */
+  async changetState(releaseId: string, state: boolean): Promise<void> {
+    await this.releaseStore.update(releaseId, { isActive: state });
+  }
 }

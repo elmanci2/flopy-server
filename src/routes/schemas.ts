@@ -57,6 +57,11 @@ export const reportStatusSchema = Joi.object({
   status: Joi.string().valid("SUCCESS", "FAILURE").required(),
 });
 
+export const changeStateSchema = Joi.object({
+  state: Joi.boolean().required(),
+  id: Joi.string().required(),
+});
+
 // Esquemas para validar solo los parámetros de la URL
 export const releaseIdParamsSchema = Joi.object({
   id: Joi.string().required(),

@@ -143,6 +143,21 @@ class ReleaseController {
     const metrics = await this.orchestrator.getMetricsForRelease(req.params.id);
     res.status(200).json(metrics);
   }
+
+  async changetState(req: Request, res: Response): Promise<void> {
+    try {
+      if (!req.body.id || !req.body.state) {
+        const message = !req.body.id ? "id is required" : "state is required";
+        res.status(400).json({ message });
+        return;
+      }
+      await this.orchestrator.changetState(req.body.id, req.body.state);
+      res.status(204).send();
+    } catch (error) {
+      console.error("[Controller] Error en checkForUpdate:", error);
+      res.status(500).json({ message: "Error interno del servidor." });
+    }
+  }
 }
 
 const releaseOrchestrator = container.resolve(ReleaseOrchestrator);

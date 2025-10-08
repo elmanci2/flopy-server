@@ -21,12 +21,9 @@ class Main {
 
     this.app.use(express.json());
 
-    // 🔹 Middleware de logging
     this.app.use((req, res, next) => {
-      // log entrada
       this.logger.info(`${req.method} ${req.url}`);
 
-      // log salida cuando termina
       res.on("finish", () => {
         this.logger.success(`${res.statusCode} ${req.method} ${req.url}`);
       });
@@ -34,10 +31,8 @@ class Main {
       next();
     });
 
-    // Rutas
     this.app.use(router);
 
-    // Ejemplo de GET /
     this.app.get("/", (_, res) => {
       res.send("Hello API 🚀");
     });
