@@ -2,8 +2,6 @@
 
 import Joi from "joi";
 
-// --- Esquemas para AppController ---
-
 export const createAppSchema = Joi.object({
   name: Joi.string().min(3).required().messages({
     "string.base": "El nombre debe ser un texto",
@@ -22,10 +20,8 @@ export const getOrDeleteAppSchema = Joi.object({
   }),
 });
 
-// --- Esquemas para ReleaseController ---
-
 export const checkForUpdateSchema = Joi.object({
-  appId: Joi.string().required(), // Joi no tiene `cuid` nativo, pero podemos usar un regex si es necesario
+  appId: Joi.string().required(),
   clientBinaryVersion: Joi.string()
     .pattern(/^\d+\.\d+\.\d+$/)
     .required()
@@ -41,9 +37,7 @@ export const publishReleaseSchema = Joi.object({
   appId: Joi.string().required(),
   channel: Joi.string().min(1).required(),
   targetBinaryVersion: Joi.string().min(1).required(),
-  // Joi convertirá automáticamente 'true'/'false' a booleano si usamos las opciones correctas en el middleware
   isMandatory: Joi.boolean().default(false),
-  // Joi convertirá automáticamente el string a número
   rolloutPercentage: Joi.number().integer().min(0).max(100).default(100),
 });
 
