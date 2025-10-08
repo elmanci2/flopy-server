@@ -146,11 +146,13 @@ class ReleaseController {
 
   async changetState(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.body.id || !req.body.state) {
-        const message = !req.body.id ? "id is required" : "state is required";
+      if (req.body.id === undefined || req.body.state === undefined) {
+        const message =
+          req.body.id === undefined ? "id is required" : "state is required";
         res.status(400).json({ message });
         return;
       }
+
       await this.orchestrator.changetState(req.body.id, req.body.state);
       res.status(204).send();
     } catch (error) {
