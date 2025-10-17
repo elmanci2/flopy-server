@@ -40,7 +40,7 @@ const routesList: RouteLst[] = [
   {
     path: "/check-for-update",
     method: "POST",
-    middleware: [validate(schemas.checkForUpdateSchema, "body")],
+    middleware: [], //[validate(schemas.checkForUpdateSchema, "body")],
     handler: releaseController.checkForUpdate.bind(releaseController),
   },
   {

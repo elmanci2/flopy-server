@@ -160,6 +160,18 @@ class ReleaseController {
       res.status(500).json({ message: "Error interno del servidor." });
     }
   }
+
+  // async deactivateOtherReleases(appId: string, channel: string, excludeId: string) {
+  //   await this.prisma.release.updateMany({
+  //     where: {
+  //       appId,
+  //       channel,
+  //       id: { not: excludeId },
+  //       isActive: true,
+  //     },
+  //     data: { isActive: false },
+  //   });
+  // }
 }
 
 const releaseOrchestrator = container.resolve(ReleaseOrchestrator);
