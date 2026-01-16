@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:server": "ts-node-dev --respawn --transpile-only --exit-child src/main.ts",
+    "dev:server": "ts-node-dev --respawn --transpile-only --exit-child  --env-file=.env src/main.ts",
     "build": "tsc",
     "start": "node dist/main.js"
   },
@@ -14,6 +14,7 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.896.0",
+    "@prisma/adapter-mariadb": "^7.2.0",
     "@prisma/client": "^6.16.3",
     "@types/adm-zip": "^0.5.7",
     "@types/archiver": "^6.0.3",
@@ -30,8 +31,9 @@
     "joi": "^18.0.1",
     "jsdiff": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.5",
     "multer": "^2.0.2",
-    "prisma": "^6.16.3",
+    "prisma": "6.16.3",
     "reflect-metadata": "^0.2.2",
     "semver": "^7.7.2",
     "signale": "^1.4.0",

@@ -6,7 +6,7 @@ import { AuthenticatedRequest } from "../../lib/auth.middleware";
 
 // Clase normal, sin decoradores
 class AppController {
-  constructor(private readonly appStore: IAppMetadataStore) {}
+  constructor(private readonly appStore: IAppMetadataStore) { }
 
   async createApp(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
