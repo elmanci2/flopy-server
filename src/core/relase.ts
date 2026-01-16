@@ -20,7 +20,7 @@ export class ReleaseOrchestrator {
     @inject("IBundleStorage") private readonly bundleStorage: IBundleStorage,
     @inject("IDeploymentMetadataStore")
     private readonly deploymentStore: IDeploymentMetadataStore,
-  ) {}
+  ) { }
 
   async publishNewRelease(
     appId: string,
@@ -102,7 +102,7 @@ export class ReleaseOrchestrator {
     return arrayOfFiles;
   }
 
-  async rollback(releaseId: string): Promise<void> {
+  async rollback(releaseId: string | any): Promise<void> {
     const updated = await this.releaseStore.update(releaseId, {
       isActive: false,
     });
@@ -116,7 +116,7 @@ export class ReleaseOrchestrator {
   /**
    * Promueve una release existente a un nuevo canal.
    */
-  async promoteRelease(releaseId: string, toChannel: string): Promise<Release> {
+  async promoteRelease(releaseId: string | any, toChannel: string): Promise<Release> {
     console.log(`Promoviendo la versión ${releaseId} al canal ${toChannel}...`);
     const originalRelease = await this.releaseStore.findById(releaseId);
     if (!originalRelease) {
@@ -140,14 +140,14 @@ export class ReleaseOrchestrator {
     await this.deploymentStore.reportStatus(data);
   }
 
-  async getReleaseHistoryForApp(appId: string): Promise<Release[]> {
+  async getReleaseHistoryForApp(appId: string | any): Promise<Release[]> {
     return this.releaseStore.findByAppId(appId);
   }
 
   /**
    * Obtiene las métricas de éxito y fallo para una release específica.
    */
-  async getMetricsForRelease(releaseId: string) {
+  async getMetricsForRelease(releaseId: string | any) {
     return this.deploymentStore.getMetricsForRelease(releaseId);
   }
 
