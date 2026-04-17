@@ -21,6 +21,19 @@ class Main {
 
     this.app.use(express.json());
 
+    // Manual CORS middleware
+    this.app.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+      
+      if (req.method === "OPTIONS") {
+        res.sendStatus(200);
+        return;
+      }
+      next();
+    });
+
     this.app.use((req, res, next) => {
       this.logger.info(`${req.method} ${req.url}`);
 

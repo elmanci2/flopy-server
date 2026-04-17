@@ -144,6 +144,12 @@ const routesList: RouteLst[] = [
     handler: appController.createDeployment.bind(appController),
   },
   {
+    path: "/metrics",
+    method: "GET",
+    middleware: [authMiddleware],
+    handler: appController.getGlobalMetrics.bind(appController),
+  },
+  {
     path: "/apps/:appId/deployments",
     method: "GET",
     middleware: [authMiddleware, validate(schemas.appIdParamsSchema, "params")],
